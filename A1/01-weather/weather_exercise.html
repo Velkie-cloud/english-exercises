@@ -404,8 +404,8 @@
             showChoiceQuestion();
         }
 
-        // 防止回上一頁為負數
-        (currentIndex - 1 + dataLength) % dataLength
+        // 防止回上一頁為負數; 造成第一題無法正確顯示
+        // (currentIndex - 1 + dataLength) % dataLength
 
         // 更新分數和進度
         function updateScore() {
