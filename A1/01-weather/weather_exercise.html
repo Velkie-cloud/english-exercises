@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天氣句型英文練習</title>
+    <link rel="stylesheet" href="weatherstyle.css">
+</head>
+<body>
+    <div class="container">
+        <h1>☀️ Lori's Classroom - 天氣句型練習 🌧️</h1>
+        
+        <div class="pattern-explanation">
+            <h4>四種天氣句型：</h4>
+            <div class="pattern-example">1. It + 天氣動詞 + 副詞 ➡️ It snows a lot. / It snows heavily.</div>
+            <div class="pattern-example">2. There is/are + 天氣名詞 ➡️ There is a lot of rain.</div>
+            <div class="pattern-example">3. We have + 天氣名詞 ➡️ We have heavy snow.</div>
+            <div class="pattern-example">4. It is + 天氣形容詞 ➡️ It is snowy here in winter.</div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('transform')">句子代換</button>
+            <button class="tab" onclick="showTab('translate')">中翻英</button>
+            <button class="tab" onclick="showTab('choice')">選擇題</button>
+        </div>
+        
+        <div class="progress">
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+        
+        <div class="score" id="scoreDisplay">得分: 0 / 0</div>
+        
+        <!-- 句子代換練習 -->
+        <div id="transform" class="practice-area active">
+            <!--下面div裡面的「題目 1/X」數字會自動變化不需調整-->
+            <div class="question-counter" id="transformCounter">題目 1 / X</div>
+            <div class="question" id="transformQuestion">
+                <h3>將下列句子改寫成其他句型：</h3>
+                <p id="transformSentence"></p>
+                <div class="input-area">
+                    <input type="text" id="transformAnswer" placeholder="請 Chank 在這裡輸入你的答案..." />
+                </div>
+                <button class="btn" onclick="prevTransform()">上一題</button>
+                <button class="btn" onclick="checkTransform()">檢查答案</button>
+                <button class="btn" onclick="nextTransform()">下一題</button>
+                <div id="transformFeedback" class="feedback" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <!-- 中翻英練習 -->
+        <div id="translate" class="practice-area">
+            <div class="question-counter" id="translateCounter">題目 1 / X</div>
+            <div class="question" id="translateQuestion">
+                <h3>將下列中文翻譯成英文：</h3>
+                <p id="translateSentence"></p>
+                <div class="input-area">
+                    <input type="text" id="translateAnswer" placeholder="請 Chank 在這裡輸入你的英文翻譯..." />
+                </div>
+                <button class="btn" onclick="prevTranslate()">上一題</button>
+                <button class="btn" onclick="checkTranslate()">檢查答案</button>
+                <button class="btn" onclick="nextTranslate()">下一題</button>
+                <div id="translateFeedback" class="feedback" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <!-- 選擇題練習 -->
+        <div id="choice" class="practice-area">
+            <div class="question-counter" id="choiceCounter">題目 1 / X</div>
+            <div class="question" id="choiceQuestion">
+                <h3>選擇正確的句子：</h3>
+                <p id="choiceSentence"></p>
+                <div class="options" id="choiceOptions"></div>
+                <button class="btn" onclick="prevChoice()">上一題</button>
+                <button class="btn" onclick="checkChoice()">檢查答案</button>
+                <button class="btn" onclick="nextChoice()">下一題</button>
+                <div id="choiceFeedback" class="feedback" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 練習數據
+        const transformData = [
+            {
+                original: "There is heavy rain in summer.",
+                alternatives: ["We have heavy rain in summer.", "It rains heavily in summer."],
+                pattern: "There is → We have / It + verb"
+            },
+            {
+                original: "We have strong winds in autumn.",
+                alternatives: ["There are strong winds in autumn.", "It's windy in autumn.", "The wind blows strongly in autumn."],
+                pattern: "We have → There are / It's + adj / subject + verb"
+            },
+            {
+                original: "It snows a lot in winter.",
+                alternatives: ["There is a lot of snow in winter.", "We have a lot of snow in winter."],
+                pattern: "It + verb → There is / We have + noun"
+            },
+            {
+                original: "There is thick fog in the morning.",
+                alternatives: ["We have thick fog in the morning.", "It's foggy in the morning."],
+                pattern: "There is → We have / It's + adj"
+            },
+            {
+                original: "We have hot weather in July.",
+                alternatives: ["There is hot weather in July.", "It's hot in July."],
+                pattern: "We have → There is / It's + adj"
+            },
+            {
+                original: "It's very cold in December.",
+                alternatives: ["There is very cold weather in December.", "We have very cold weather in December."],
+                pattern: "It's + adj → There is / We have + noun"
+            },
+            {
+                original: "Test 7",
+                alternatives: ["There is very cold weather in December.", "We have very cold weather in December."],
+                pattern: "It's + adj → There is / We have + noun"
+            }            
+        ];
+
+        const translateData = [
+             {
+                chinese: "台灣夏天有很多雨。",
+                answers: ["There is a lot of rain in Taiwan in summer.", "We have a lot of rain in Taiwan in summer.", "It rains a lot in Taiwan in summer.", "It is rainy in Taiwan in summer."]
+            },
+            {
+                chinese: "這裡冬天經常下雪。",
+                answers: ["There is often snow here in winter.", "We often have snow here in winter.", "It often snows here in winter.", "It is often snowy here in winter."]
+            },
+            {
+                chinese: "那裡很少下雨。",
+                answers: ["There is little rain there.", "They have little rain there.", "It seldom/rarely rains there."]
+            },
+            {
+                chinese: "春天風很大。",
+                answers: ["It is windy in spring.", "There are strong winds in spring.", "We have strong winds in spring."]
+            },
+            {
+                chinese: "早上有濃霧。(🔆 霧：fog、foggy)",
+                answers: ["There is thick/heavy fog in the morning.", "We have thick/heavy fog in the morning.", "It's foggy in the morning."]
+            },
+            {
+                chinese: "昨天非常晴朗(有燦爛的陽光)。",
+                answers: ["There was bright sunshine yesterday.", "We had bright sunshine yesterday.", "It was very sunny yesterday."]
+            }
+        ];
+
+        const choiceData = [
+            {
+                question: "「冬天下大雪」的正確英文是：",
+                options: [
+                    "There is heavy snow in winter.",
+                    "There have heavy snow in winter.",
+                    "It have heavy snow in winter.",
+                    "There are heavy snow in winter."
+                ],
+                correct: 0
+            },
+            {
+                question: "「我們這裡經常刮風」的正確英文是：",
+                options: [
+                    "We often has wind here.",
+                    "We often have wind here.",
+                    "There often have wind here.",
+                    "It often have wind here."
+                ],
+                correct: 1
+            },
+            {
+                question: "「夏天很熱」的正確英文是：",
+                options: [
+                    "There is hot in summer.",
+                    "We have hot in summer.",
+                    "It's hot in summer.",
+                    "There are hot in summer."
+                ],
+                correct: 2
+            },
+            {
+                question: "「春天雨水很多」的正確英文是：",
+                options: [
+                    "It rains a lot in spring.",
+                    "It rain a lot in spring.",
+                    "There rain a lot in spring.",
+                    "We rain a lot in spring."
+                ],
+                correct: 0
+            },
+            {
+                question: "「今天有雷雨」的正確英文是：",
+                options: [
+                    "It have thunderstorms today.",
+                    "There have thunderstorms today.",
+                    "There are thunderstorms today.",
+                    "We are thunderstorms today."
+                ],
+                correct: 2
+            }
+        ];
+
+        // 全局變量
+        let currentTransformIndex = 0;
+        let currentTranslateIndex = 0;
+        let currentChoiceIndex = 0;
+        let score = 0;
+        let totalQuestions = 0;
+        let selectedOption = -1;
+
+        // 初始化
+        function init() {
+            showTransformQuestion();
+            showTranslateQuestion();
+            showChoiceQuestion();
+            updateScore();
+            updateCounters();
+        }
+
+        // 顯示標籤頁
+        function showTab(tabName) {
+            // 隱藏所有練習區域
+            document.querySelectorAll('.practice-area').forEach(area => {
+                area.classList.remove('active');
+            });
+            
+            // 移除所有標籤的active class
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 顯示選中的練習區域和標籤
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // 更新題目計數器
+        function updateCounters() {
+            document.getElementById('transformCounter').textContent = `題目 ${currentTransformIndex + 1} / ${transformData.length}`;
+            document.getElementById('translateCounter').textContent = `題目 ${currentTranslateIndex + 1} / ${translateData.length}`;
+            document.getElementById('choiceCounter').textContent = `題目 ${currentChoiceIndex + 1} / ${choiceData.length}`;
+        }
+
+        // 句子代換練習
+        function showTransformQuestion() {
+            const question = transformData[currentTransformIndex];
+            document.getElementById('transformSentence').textContent = question.original;
+            document.getElementById('transformAnswer').value = '';
+            document.getElementById('transformFeedback').style.display = 'none';
+            updateCounters();
+        }
+
+        function checkTransform() {
+            const userAnswer = document.getElementById('transformAnswer').value.trim();
+            const question = transformData[currentTransformIndex];
+            const feedback = document.getElementById('transformFeedback');
+            
+            totalQuestions++;
+            
+            let isCorrect = false;
+            for (let answer of question.alternatives) {
+                if (userAnswer.toLowerCase() === answer.toLowerCase()) {
+                    isCorrect = true;
+                    break;
+                }
+            }
+            
+            if (isCorrect) {
+                score++;
+                feedback.className = 'feedback correct';
+                feedback.textContent = '正確！✅ 很好的句型轉換！';
+            } else {
+                feedback.className = 'feedback wrong';
+                feedback.textContent = `❌ 參考答案：${question.alternatives.join(' / ')}`;
+            }
+            
+            feedback.style.display = 'block';
+            updateScore();
+        }     
+
+        function prevTransform() {
+            currentTransformIndex = (currentTransformIndex + 1) % transformData.length;
+            showTransformQuestion();
+        }                
+
+        function nextTransform() {
+            currentTransformIndex = (currentTransformIndex + 1) % transformData.length;
+            showTransformQuestion();
+        }
+
+        // 中翻英練習
+        function showTranslateQuestion() {
+            const question = translateData[currentTranslateIndex];
+            document.getElementById('translateSentence').textContent = question.chinese;
+            document.getElementById('translateAnswer').value = '';
+            document.getElementById('translateFeedback').style.display = 'none';
+            updateCounters();
+        }
+
+        function checkTranslate() {
+            const userAnswer = document.getElementById('translateAnswer').value.trim();
+            const question = translateData[currentTranslateIndex];
+            const feedback = document.getElementById('translateFeedback');
+            
+            totalQuestions++;
+            
+            let isCorrect = false;
+            for (let answer of question.answers) {
+                if (userAnswer.toLowerCase() === answer.toLowerCase()) {
+                    isCorrect = true;
+                    break;
+                }
+            }
+            
+            if (isCorrect) {
+                score++;
+                feedback.className = 'feedback correct';
+                feedback.textContent = '正確！✅ 翻譯得很好！';
+            } else {
+                feedback.className = 'feedback wrong';
+                feedback.textContent = `❌ 參考答案：${question.answers.join(' / ')}`;
+            }
+            
+            feedback.style.display = 'block';
+            updateScore();
+        }
+
+        function prevTranslate() {
+            currentTranslateIndex = (currentTranslateIndex - 1) % translateData.length;
+            showTranslateQuestion();
+        }                        
+
+        function nextTranslate() {
+            currentTranslateIndex = (currentTranslateIndex + 1) % translateData.length;
+            showTranslateQuestion();
+        }
+
+        // 選擇題練習
+        function showChoiceQuestion() {
+            const question = choiceData[currentChoiceIndex];
+            document.getElementById('choiceSentence').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('choiceOptions');
+            optionsContainer.innerHTML = '';
+            selectedOption = -1;
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => selectOption(index);
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            document.getElementById('choiceFeedback').style.display = 'none';
+            updateCounters();
+        }
+
+        function selectOption(index) {
+            // 移除之前的選擇
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // 選擇當前選項
+            document.querySelectorAll('.option')[index].classList.add('selected');
+            selectedOption = index;
+        }
+
+        function checkChoice() {
+            if (selectedOption === -1) {
+                alert('請先選擇一個答案！');
+                return;
+            }
+            
+            const question = choiceData[currentChoiceIndex];
+            const feedback = document.getElementById('choiceFeedback');
+            const options = document.querySelectorAll('.option');
+            
+            totalQuestions++;
+            
+            // 顯示正確答案
+            options[question.correct].classList.add('correct');
+            
+            if (selectedOption === question.correct) {
+                score++;
+                feedback.className = 'feedback correct';
+                feedback.textContent = '正確！✅ 文法掌握得很好！';
+            } else {
+                options[selectedOption].classList.add('wrong');
+                feedback.className = 'feedback wrong';
+                feedback.textContent = '❌ 正確答案已標示為綠色，注意文法結構！';
+            }
+            
+            feedback.style.display = 'block';
+            updateScore();
+        }
+
+        function prevChoice() {
+            currentChoiceIndex = (currentChoiceIndex - 1) % choiceData.length;
+            showChoiceQuestion();
+        }        
+
+        function nextChoice() {
+            currentChoiceIndex = (currentChoiceIndex + 1) % choiceData.length;
+            showChoiceQuestion();
+        }
+
+        // 防止回上一頁為負數
+        (currentIndex - 1 + dataLength) % dataLength
+
+        // 更新分數和進度
+        function updateScore() {
+            const percentage = totalQuestions > 0 ? (score / totalQuestions) * 100 : 0;
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('scoreDisplay').textContent = `得分: ${score} / ${totalQuestions} (${percentage.toFixed(1)}%)`;
+        }
+
+        // 添加Enter鍵支持
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('transformAnswer').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkTransform();
+                }
+            });
+            
+            document.getElementById('translateAnswer').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkTranslate();
+                }
+            });
+        });
+
+        // 初始化頁面
+        init();
+    </script>
+</body>
+</html>
