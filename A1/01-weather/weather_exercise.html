@@ -81,73 +81,107 @@
     <script>
         // 練習數據
         const transformData = [
-            {
-                original: "There is heavy rain in summer.",
-                alternatives: ["We have heavy rain in summer.", "It rains heavily in summer."],
-                pattern: "There is → We have / It + verb"
-            },
-            {
-                original: "We have strong winds in autumn.",
-                alternatives: ["There are strong winds in autumn.", "It's windy in autumn.", "The wind blows strongly in autumn."],
-                pattern: "We have → There are / It's + adj / subject + verb"
-            },
+            // 1-1
             {
                 original: "It snows a lot in winter.",
                 alternatives: ["There is a lot of snow in winter.", "We have a lot of snow in winter."],
                 pattern: "It + verb → There is / We have + noun"
             },
-            {
-                original: "There is thick fog in the morning.",
-                alternatives: ["We have thick fog in the morning.", "It's foggy in the morning."],
-                pattern: "There is → We have / It's + adj"
-            },
-            {
-                original: "We have hot weather in July.",
-                alternatives: ["There is hot weather in July.", "It's hot in July."],
-                pattern: "We have → There is / It's + adj"
-            },
+            // 1-2
             {
                 original: "It's very cold in December.",
                 alternatives: ["There is very cold weather in December.", "We have very cold weather in December."],
                 pattern: "It's + adj → There is / We have + noun"
             },
+            // 1-3            
             {
-                original: "Test 7",
-                alternatives: ["There is very cold weather in December.", "We have very cold weather in December."],
-                pattern: "It's + adj → There is / We have + noun"
+                original: "There is heavy rain in summer.",
+                alternatives: ["We have heavy rain in summer.", "It rains heavily in summer."],
+                pattern: "There is → We have / It + verb"
+            },
+            // 1-4
+            {
+                original: "We have strong winds in autumn.",
+                alternatives: ["There are strong winds in autumn.", "It's windy in autumn.", "The wind blows strongly in autumn."],
+                pattern: "We have → There are / It's + adj / subject + verb"
+            },
+            // 1-5
+            {
+                original: "There is thick fog in the morning.",
+                alternatives: ["We have thick fog in the morning.", "It's foggy in the morning."],
+                pattern: "There is → We have / It's + adj"
+            },
+            // 1-6
+            {
+                original: "We have hot weather in July.",
+                alternatives: ["There is hot weather in July.", "It's hot in July."],
+                pattern: "We have → There is / It's + adj"
+            },
+            // 1-7
+            {
+                original: "It doesn't snow much in Vietnam.",
+                alternatives: ["There is very little snow in Vietnam.", "They have very little snow in Vietnam.", "It is rarely snowy in Vietnam."],
+                pattern: "It + verb + not much → There is / We have + very little + noun"
             }            
         ];
 
         const translateData = [
+            // 2-1
              {
                 chinese: "台灣夏天有很多雨。",
                 answers: ["There is a lot of rain in Taiwan in summer.", "We have a lot of rain in Taiwan in summer.", "It rains a lot in Taiwan in summer.", "It is rainy in Taiwan in summer."]
             },
+            // 2-2
             {
                 chinese: "這裡冬天經常下雪。",
                 answers: ["There is often snow here in winter.", "We often have snow here in winter.", "It often snows here in winter.", "It is often snowy here in winter."]
             },
+            // 2-3
             {
                 chinese: "那裡很少下雨。",
                 answers: ["There is little rain there.", "They have little rain there.", "It seldom/rarely rains there."]
             },
+            // 2-4
             {
                 chinese: "春天風很大。",
                 answers: ["It is windy in spring.", "There are strong winds in spring.", "We have strong winds in spring."]
             },
+            // 2-5
             {
                 chinese: "早上有濃霧。(🔆 霧：fog、foggy)",
                 answers: ["There is thick/heavy fog in the morning.", "We have thick/heavy fog in the morning.", "It's foggy in the morning."]
             },
+            // 2-6
             {
                 chinese: "昨天非常晴朗(有燦爛的陽光)。",
                 answers: ["There was bright sunshine yesterday.", "We had bright sunshine yesterday.", "It was very sunny yesterday."]
+            },
+            // 2-7
+            {
+                chinese: "東京春天會下雪嗎？",
+                answers: ["Does it snow in spring in Tokyo in spring?","Do they have snow in Tokyo in spring?","Is there snow in Tokyo in spring?","Is it snowy in Tokyo in spring?"]
+            },
+            // 2-8
+            {
+                chinese: "去年秋天都沒有下雨。",
+                answers: ["We didn't have any rain (there) last autumn.","There wasn't any rain last autumn.","It didn't rain (at all)last autumn."]
+            },
+            // 2-9
+            {
+                chinese: "現在山上是不是在下雪了？",
+                answers: ["Is it snowing in the mountains now?","Is it snowy in the mounatins now?","Do we have snow in the mountains now?", "Is there snow in the mountains now?"]
+            },
+            // 2-10
+            {
+                chinese: "印度上週下雪。",
+                answers: ["It snowed in India last week.", "They had snow in India last week."]
             }
         ];
 
         const choiceData = [
+            // 3-1
             {
-                question: "「冬天下大雪」的正確英文是：",
+                question: "「冬天會下大雪。」的正確英文是：",
                 options: [
                     "There is heavy snow in winter.",
                     "There have heavy snow in winter.",
@@ -156,8 +190,9 @@
                 ],
                 correct: 0
             },
+            // 3-2
             {
-                question: "「我們這裡經常刮風」的正確英文是：",
+                question: "「我們這裡經常刮風。」的正確英文是：",
                 options: [
                     "We often has wind here.",
                     "We often have wind here.",
@@ -166,8 +201,9 @@
                 ],
                 correct: 1
             },
+            // 3-3
             {
-                question: "「夏天很熱」的正確英文是：",
+                question: "「夏天很熱。」的正確英文是：",
                 options: [
                     "There is hot in summer.",
                     "We have hot in summer.",
@@ -176,8 +212,9 @@
                 ],
                 correct: 2
             },
+            // 3-4
             {
-                question: "「春天雨水很多」的正確英文是：",
+                question: "「春天雨水很多。」的正確英文是：",
                 options: [
                     "It rains a lot in spring.",
                     "It rain a lot in spring.",
@@ -186,8 +223,9 @@
                 ],
                 correct: 0
             },
+            // 3-5
             {
-                question: "「今天有雷雨」的正確英文是：",
+                question: "「今天有雷雨。」的正確英文是：",
                 options: [
                     "It have thunderstorms today.",
                     "There have thunderstorms today.",
@@ -195,7 +233,62 @@
                     "We are thunderstorms today."
                 ],
                 correct: 2
-            }
+            },
+            // 3-6
+            {
+                question: "____ very little snow in Taiwan.",
+                options: [
+                    "There were",
+                    "There has",
+                    "There is",
+                    "It is"
+                ],
+                correct: 2
+            },
+            // 3-7
+            {
+                question: "A: ____ a lot of snow in your country? B: No, no that much. ",
+                options: [
+                    "Is it",
+                    "Were there",
+                    "Does it",
+                    "Did you have"
+                ],  
+                correct: 3
+            },
+            // 3-8
+            {
+                question: "____ was the weather like in Toronto?",
+                options: [
+                    "What",
+                    "How",
+                    "When",
+                    "Which"
+                ],  
+                correct: 1
+            },
+            // 3-9
+            {
+                question: "____ usually rains a lot in many Asian countries in the summertime.",
+                options: [
+                    "It",
+                    "The weather",
+                    "They have",
+                    "There is"
+                ],  
+                correct: 0
+            },
+            // 3-10
+            {
+                question: "It ____ now. Don't got out. You may get wet.",
+                options: [
+                    "rain",
+                    "has rain",
+                    "was rainy",
+                    "is raining"
+                ],  
+                correct: 3
+            }                                    
         ];
 
         // 全局變量
@@ -277,7 +370,7 @@
         }     
 
         function prevTransform() {
-            currentTransformIndex = (currentTransformIndex + 1) % transformData.length;
+            currentTransformIndex = (currentTransformIndex - 1) % transformData.length;
             showTransformQuestion();
         }                
 
